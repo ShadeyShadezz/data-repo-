@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* All global variables belong in a SINGLE :root block */
 :root {
   /* Color palette (wireframe) */
   --color-primary: #3b82f6;
@@ -21,6 +22,7 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
 }
 
+/* DARK MODE OVERRIDES */
 @media (prefers-color-scheme: dark) {
   :root {
     --color-bg: #0b1220;
@@ -39,6 +41,8 @@ body {
   color: var(--color-text);
   font-family: var(--font-sans);
   font-size: 16px;
+  line-height: 1.6;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -51,9 +55,11 @@ body {
 }
 
 header.site-header {
-  background: transparent;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(90deg, rgba(59,130,246,0.06), rgba(16,185,129,0.03));
+  padding: 0 0;
+  height: 64px;
+  display: flex;
+  align-items: center;
 }
 
 .nav {
@@ -71,6 +77,8 @@ header.site-header {
 .main {
   padding: 24px 0;
   min-height: calc(100vh - 64px);
+  display: grid;
+  gap: 24px;
 }
 
 .card {
@@ -123,6 +131,47 @@ input[type="file"] {
   color: var(--state-poor);
 }
 
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+/* Table wrapper to allow horizontal scroll on narrow screens */
+.table-wrapper { overflow-x: auto; }
+
+/* Heading weights and data font */
+h1,h2,h3,h4,h5,h6 {
+  font-weight: 600;
+}
+
+/* Prevent horizontal overflow */
+html, body { overflow-x: hidden; }
+
+.page-hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: calc(100vh - 64px);
+}
+
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 20px;
+  align-items: start;
+}
+
+.two-column > *:last-child {
+  align-self: start;
+}
+
+.stack-on-mobile {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
 table.data-table {
   width: 100%;
   border-collapse: collapse;
@@ -132,6 +181,27 @@ table.data-table th,
 table.data-table td {
   padding: 8px 12px;
   border-bottom: 1px solid #f3f4f6;
+}
+
+/* Responsive breakpoints aligning with project spec */
+@media (max-width: 767px) {
+  /* Mobile: single column */
+  .two-column { grid-template-columns: 1fr !important; }
+  .grid-container { grid-template-columns: 1fr !important; }
+  .page-hero { padding: 32px 12px; }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Desktop (standard): three-column dashboard layout */
+  .grid-container { grid-template-columns: repeat(3, 1fr); }
+  /* two-column areas remain two columns but can be adapted per page */
+  .two-column { grid-template-columns: 1fr 360px; }
+}
+
+@media (min-width: 1024px) {
+  /* Large screens: left sidebar + main content */
+  .two-column { grid-template-columns: 260px 1fr; }
+  .grid-container { grid-template-columns: repeat(4, 1fr); }
 }
 
 .score-card {
@@ -153,13 +223,26 @@ table.data-table td {
 }
 
 @media (max-width: 640px) {
-  .nav { gap: 8px; }
-  .dropzone { padding: 20px; }
+  .nav {
+    gap: 8px;
+  }
+  .dropzone {
+    padding: 20px;
+  }
 }
 
-/* Full-bleed header background and page accent */
-header.site-header { background: linear-gradient(90deg, rgba(59,130,246,0.06), rgba(16,185,129,0.03)); }
+a:focus,
+button:focus,
+input:focus {
+  outline: 3px solid rgba(59,130,246,0.22);
+  outline-offset: 2px;
+}
 
-main h1 { color: var(--color-text); margin: 0 0 8px 0; }
+.fill-remaining {
+  min-height: calc(100vh - 64px);
+}
 
-
+main h1 {
+  color: var(--color-text);
+  margin: 0 0 8px 0;
+}

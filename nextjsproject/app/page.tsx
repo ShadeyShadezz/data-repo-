@@ -1,65 +1,106 @@
-import Image from "next/image";
+"use client";
+
+import React, { useCallback, useState, useEffect } from "react";
+import Link from "next/link";
+import Papa from "papaparse";
 
 export default function Home() {
+  const [dragOver, setDragOver] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [recent, setRecent] = useState<{ fileName: string; rows: number } | null>(null);
+
+  useEffect(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem("uploadedData") ?? "null");
+      if (stored && stored.fileName) {
+        setRecent({ fileName: stored.fileName, rows: (stored.data ?? []).length });
+      }
+    } catch {}
+  }, []);
+
+  const handleFile = useCallback((file: File | null) => {
+    setError(null);
+    if (!file) return;
+    if (file.size > 50 * 1024 * 1024) {
+      setError("File too large (max 50MB)");
+      return;
+    }
+
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      worker: true,
+      complete: (results) => {
+        try {
+          const data = results.data as any[];
+          localStorage.setItem("uploadedData", JSON.stringify({ fileName: file.name, data }));
+          // Navigate to preview
+          window.location.href = '/preview';
+        } catch (e) {
+          setError("Failed to save file in browser");
+        }
+      },
+      error: (err) => setError("Parse error: " + String(err?.message ?? err)),
+    });
+  }, []);
+
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files?.[0] ?? null;
+    handleFile(file);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="page-hero">
+      <div className="container">
+        <div className="card" style={{ marginBottom: 20 }}>
+          <h1>Upload Your Dataset</h1>
+          <p className="muted">Instant AI-powered data quality analysis — privacy-first, client-side parsing</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div style={{ display: 'grid', gap: 20 }}>
+          <div className={`dropzone ${dragOver ? 'dragover' : ''}`} onDragOver={(e) => { e.preventDefault(); setDragOver(true); }} onDragLeave={() => setDragOver(false)} onDrop={onDrop} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter') { const input = (e.currentTarget as HTMLElement).querySelector('input[type=file]') as HTMLInputElement | null; input?.click(); } }}>
+            <div className="center" style={{ fontSize: 18 }}>📤 Drag & Drop File Here</div>
+            <div className="muted">or</div>
+            <input aria-label="Choose file" type="file" accept=".csv,text/csv,application/json,application/vnd.ms-excel,text/plain" onChange={(e) => handleFile(e.target.files?.[0] ?? null)} />
+            <div className="muted" style={{ marginTop: 8 }}>Supported: CSV, JSON, Excel (max 50MB)</div>
+            {error && <div className="error" role="alert" style={{ marginTop: 8 }}>{error}</div>}
+          </div>
+
+          <div className="two-column">
+            <div className="panel">
+              <h3>Recent Analyses</h3>
+              {recent ? (
+                <div className="card recent-item">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <div style={{ fontWeight: 700 }}>{recent.fileName}</div>
+                      <div className="muted">{recent.rows} rows — analyzed earlier</div>
+                    </div>
+                    <div>
+                      <Link href="/preview"><button className="btn">Open</button></Link>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="muted">No recent analyses</div>
+              )}
+            </div>
+
+            <aside className="panel">
+              <h3>About this website</h3>
+              <p className="muted">Agentic Data Quality is a lightweight, client-first tool for quick dataset inspection and AI-assisted recommendations. Files are parsed in your browser; no data leaves your machine unless you choose to export or share.</p>
+              <p style={{ marginTop: 8 }}><strong>How it works:</strong></p>
+              <ul>
+                <li>Upload a CSV/JSON/Excel file.</li>
+                <li>Preview data and column statistics.</li>
+                <li>Run analysis to get quality scores, charts and AI recommendations.</li>
+              </ul>
+            </aside>
+          </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

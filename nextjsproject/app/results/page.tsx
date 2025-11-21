@@ -69,45 +69,63 @@ export default function ResultsPage() {
 
   return (
     <main>
-      <h1>Analysis Results</h1>
-      <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
-        <div className="score-card">
-          <div className="score-number">{metrics.score}</div>
-          <div style={{ color: 'var(--color-neutral)' }}>Data Quality</div>
-        </div>
-        <div className="metrics-list">
-          <div>Completeness: {metrics.completeness}</div>
-          <div>Consistency: {metrics.consistency}</div>
-          <div>Accuracy: {metrics.accuracy}</div>
-          <div>Validity: {metrics.validity}</div>
-        </div>
-      </div>
+      <div className="container">
+        <div className="two-column">
+        <div>
+          <h1>Analysis Results</h1>
 
-      <section style={{ marginTop: 24 }}>
-        <h2>Recommendations</h2>
-        <ul className="card">
-          <li>Address missing values in key columns (see preview).</li>
-          <li>Validate common formats (emails, dates).</li>
-          <li>Review outliers in numeric fields.</li>
-        </ul>
-      </section>
-
-      <section style={{ marginTop: 24 }}>
-        <h2>Visualizations</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 16, alignItems: 'start' }}>
-          <div className="card">
-            <h3>Missing values by column</h3>
-            <Bar data={barData} />
+          <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+            <div className="score-card">
+              <div className="score-number">{metrics.score}</div>
+              <div className="muted">Data Quality</div>
+            </div>
+            <div className="panel">
+              <h3>Quality Metrics</h3>
+              <div className="metrics-list">
+                <div>Completeness: {metrics.completeness}%</div>
+                <div>Consistency: {metrics.consistency}%</div>
+                <div>Accuracy: {metrics.accuracy}%</div>
+                <div>Validity: {metrics.validity}%</div>
+              </div>
+            </div>
           </div>
-          <div className="card">
-            <h3>Column types</h3>
-            <Pie data={pieData} />
-          </div>
-        </div>
-      </section>
 
-      <div style={{ marginTop: 24 }}>
-        <Link href="/insights"><button className="btn">AI Insights</button></Link>
+          <section style={{ marginTop: 24 }}>
+            <h2>Recommendations</h2>
+            <div className="card">
+              <ol>
+                <li>Address missing values in key columns (see preview).</li>
+                <li>Validate common formats (emails, dates).</li>
+                <li>Review outliers in numeric fields.</li>
+              </ol>
+            </div>
+          </section>
+
+          <section style={{ marginTop: 24 }}>
+            <h2>Visualizations</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 16, alignItems: 'start' }}>
+              <div className="card">
+                <h3>Missing values by column</h3>
+                <div className="table-wrapper"><Bar data={barData} /></div>
+              </div>
+              <div className="card">
+                <h3>Column types</h3>
+                <div className="table-wrapper"><Pie data={pieData} /></div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <aside>
+          <div className="card panel">
+            <h3>Actions</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <Link href="/insights"><button className="btn">AI Insights</button></Link>
+              <button className="btn secondary">Export Recommendations</button>
+            </div>
+          </div>
+        </aside>
+        </div>
       </div>
     </main>
   );

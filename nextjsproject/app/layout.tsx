@@ -29,7 +29,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <header className="site-header">
-          <div className="container">
+          <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ fontWeight: 700, color: 'var(--color-text)' }}>
+              Agentic Data Quality
+            </div>
             <nav className="nav">
               <Link href="/">Home</Link>
               <Link href="/upload">Upload</Link>
@@ -39,7 +42,9 @@ export default function RootLayout({
             </nav>
           </div>
         </header>
-        <div className="container main">{children}</div>
+        <main className="main">
+          <div className="container">{children}</div>
+        </main>
       </body>
     </html>
   );

@@ -49,28 +49,34 @@ export default function UploadPage() {
   };
 
   return (
-    <main>
-      <h1>Data Quality Analysis — Upload</h1>
-      <p>Drag & drop a CSV file (or click to choose). Max 50MB.</p>
+    <main className="page-hero">
+      <div className="container">
+        <div className="card">
+          <h1>Data Quality Analysis — Upload</h1>
+          <p className="muted">Drag & drop a CSV file (or click to choose). Max 50MB.</p>
 
-      <div
-        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-        onDragLeave={() => setDragOver(false)}
-        onDrop={onDrop}
-        className={`dropzone ${dragOver ? 'dragover' : ''}`}
-      >
-        <p style={{ margin: 0 }}>📤 Drop file here</p>
-        <p style={{ color: 'var(--color-neutral)' }}>or</p>
-        <input
-          aria-label="Choose file"
-          type="file"
-          accept=".csv,text/csv,application/json,application/vnd.ms-excel,text/plain"
-          onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
-        />
-        {parsing && <p style={{ color: 'var(--color-neutral)' }}>Parsing file…</p>}
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
+            <div
+              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={onDrop}
+              className={`dropzone ${dragOver ? 'dragover' : ''}`}
+            >
+              <p style={{ margin: 0, fontSize: 18 }}>📤 Drop file here</p>
+              <p className="muted">or</p>
+              <input
+                aria-label="Choose file"
+                type="file"
+                accept=".csv,text/csv,application/json,application/vnd.ms-excel,text/plain"
+                onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
+              />
+              {parsing && <p className="muted">Parsing file…</p>}
+            </div>
+          </div>
+
+          {error && <div className="error" style={{ marginTop: 12 }}>{error}</div>}
+        </div>
       </div>
-
-      {error && <p className="error">{error}</p>}
     </main>
   );
 }
