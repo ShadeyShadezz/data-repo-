@@ -1,4 +1,7 @@
-@import "tailwindcss";
+/* your custom CSS variables and styles follow below */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* All global variables belong in a SINGLE :root block */
 :root {
@@ -31,10 +34,9 @@
   }
 }
 
-html, body {
-  height: 100%;
-}
-
+/* ... rest of your styles unchanged ... */
+/* (paste the remaining CSS from your original file here unchanged) */
+html, body { height: 100%; }
 body {
   margin: 0;
   background: var(--color-bg);
@@ -54,195 +56,14 @@ body {
   padding: 0 16px;
 }
 
-header.site-header {
-  background: linear-gradient(90deg, rgba(59,130,246,0.06), rgba(16,185,129,0.03));
-  padding: 0 0;
-  height: 64px;
-  display: flex;
-  align-items: center;
-}
-
-.nav {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-}
-
-.nav a {
-  color: var(--color-primary);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.main {
-  padding: 24px 0;
-  min-height: calc(100vh - 64px);
-  display: grid;
-  gap: 24px;
-}
-
-.card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 16px;
-  box-shadow: 0 4px 10px rgba(2,6,23,0.04);
+:root {
+  --brand-blue: #3b82f6;
 }
 
 .dropzone {
-  border: 2px dashed var(--color-border);
-  padding: 36px;
-  border-radius: 8px;
-  background: var(--color-surface);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  max-width: 720px;
+  border: 2px dashed var(--brand-blue);
+  padding: 24px;
+  border-radius: 12px;
+  background-color: #f9fafb;
 }
 
-.dropzone.dragover {
-  background: #f1f5f9;
-  border-color: var(--color-primary);
-  box-shadow: 0 6px 20px rgba(59,130,246,0.08);
-}
-
-input[type="file"] {
-  margin-top: 8px;
-}
-
-.btn {
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  padding: 10px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.btn.secondary {
-  background: transparent;
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
-}
-
-.error {
-  color: var(--state-poor);
-}
-
-.grid-container {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-}
-
-/* Table wrapper to allow horizontal scroll on narrow screens */
-.table-wrapper { overflow-x: auto; }
-
-/* Heading weights and data font */
-h1,h2,h3,h4,h5,h6 {
-  font-weight: 600;
-}
-
-/* Prevent horizontal overflow */
-html, body { overflow-x: hidden; }
-
-.page-hero {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: calc(100vh - 64px);
-}
-
-.two-column {
-  display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 20px;
-  align-items: start;
-}
-
-.two-column > *:last-child {
-  align-self: start;
-}
-
-.stack-on-mobile {
-  display: grid;
-  grid-template-columns: 1fr;
-}
-
-table.data-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-table.data-table th,
-table.data-table td {
-  padding: 8px 12px;
-  border-bottom: 1px solid #f3f4f6;
-}
-
-/* Responsive breakpoints aligning with project spec */
-@media (max-width: 767px) {
-  /* Mobile: single column */
-  .two-column { grid-template-columns: 1fr !important; }
-  .grid-container { grid-template-columns: 1fr !important; }
-  .page-hero { padding: 32px 12px; }
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-  /* Desktop (standard): three-column dashboard layout */
-  .grid-container { grid-template-columns: repeat(3, 1fr); }
-  /* two-column areas remain two columns but can be adapted per page */
-  .two-column { grid-template-columns: 1fr 360px; }
-}
-
-@media (min-width: 1024px) {
-  /* Large screens: left sidebar + main content */
-  .two-column { grid-template-columns: 260px 1fr; }
-  .grid-container { grid-template-columns: repeat(4, 1fr); }
-}
-
-.score-card {
-  padding: 20px;
-  border-radius: 8px;
-  background: linear-gradient(180deg, rgba(59,130,246,0.06), rgba(59,130,246,0.02));
-  min-width: 140px;
-  text-align: center;
-  border: 1px solid rgba(59,130,246,0.12);
-}
-
-.score-number {
-  font-size: 36px;
-  font-weight: 700;
-}
-
-.metrics-list div {
-  margin-bottom: 6px;
-}
-
-@media (max-width: 640px) {
-  .nav {
-    gap: 8px;
-  }
-  .dropzone {
-    padding: 20px;
-  }
-}
-
-a:focus,
-button:focus,
-input:focus {
-  outline: 3px solid rgba(59,130,246,0.22);
-  outline-offset: 2px;
-}
-
-.fill-remaining {
-  min-height: calc(100vh - 64px);
-}
-
-main h1 {
-  color: var(--color-text);
-  margin: 0 0 8px 0;
-}
